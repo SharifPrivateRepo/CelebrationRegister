@@ -1,0 +1,53 @@
+﻿@model CelebrationRegister.Data.Entities.Employee
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Areas/Admin/Views/Shared/_DefaultLayout.cshtml";
+}
+
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        حذف کاربر
+    </div>
+    <div class="panel-body">
+        <h3>
+            آیا از حذف کارمند @Model.FullName مطمئن هستید؟
+        </h3>
+        <div>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.NationalCode)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.NationalCode)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ProsonnelCode)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.ProsonnelCode)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.FullName)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.FullName)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ChildCount)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.ChildCount)
+                </dd>
+            </dl>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="EmployeeId" />
+                <input type="submit" value=" حذف کارمند " class="btn btn-danger" /> |
+                <a asp-action="Index" class="btn btn-primary"> بازگشت به فهرست </a>
+            </form>
+        </div>
+
+    </div>
+</div>

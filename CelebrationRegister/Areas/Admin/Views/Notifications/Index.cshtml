@@ -1,0 +1,55 @@
+﻿@using CelebrationRegister.Core.Convertors
+@model IEnumerable<CelebrationRegister.Data.Entities.Notification>
+
+@{
+    ViewData["Title"] = "لیست اطلاعیه ها";
+}
+
+<h1>لیست اطلاعیه ها</h1>
+
+<p>
+    <a class="btn btn-success" asp-area="Admin" asp-controller="Notifications" asp-action="Create">درج اطلاعیه</a>
+</p>
+<table class="table table-primary table-bordered">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Image)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShortDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <img src="/NotificationImages/@item.Image" style=" width: 284px;height: 177px;" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShortDescription)
+                </td>
+                <td>
+                   @item.CreateDate.ToShamsi()
+                </td>
+                <td>
+                    <a asp-area="Admin" asp-action="Edit" asp-route-id="@item.NotificationId" class="btn btn-warning">ویرایش</a> |
+                    <a asp-action="Details" asp-route-id="@item.NotificationId" class="btn btn-info">مشاهده جزئیات</a> |
+                    <a asp-action="Delete" asp-route-id="@item.NotificationId" class="btn btn-danger">حذف اطلاعیه</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

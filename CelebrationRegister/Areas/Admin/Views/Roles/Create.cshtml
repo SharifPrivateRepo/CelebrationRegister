@@ -1,0 +1,61 @@
+﻿@using CelebrationRegister.Data.Entities.Role
+@model CelebrationRegister.Core.ViewModels.AdminViewModel.CreateRoleViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_DefaultLayout.cshtml";
+    List<Permission> permissions = ViewData["Permissions"] as List<Permission>;
+}
+
+
+<h4>افزودن نقش جدید</h4>
+<form asp-action="Create">
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="RoleTitle" class="control-label"></label>
+                <input asp-for="RoleTitle" class="form-control" />
+                <span asp-validation-for="RoleTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-success" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <ul>
+
+                @foreach (var item in permissions.Where(p => p.ParentId == null))
+                {
+                    <li>
+                        <input class="checkbox-inline" value="@item.PermissionId" type="checkbox" name="selectedPermissions"/>
+                        @item.PermissionTitle
+                    </li>
+                    @if (permissions.Any(p => p.ParentId == item.PermissionId))
+                    {
+                        <ul>
+                            @foreach (var sub in permissions.Where(p => p.ParentId == item.PermissionId))
+                            {
+                                <li>
+                                    <input class="checkbox-inline" value="@sub.PermissionId" type="checkbox" name="selectedPermissions"/>
+                                    @sub.PermissionTitle
+                                </li>
+                            }
+                        </ul>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index" class="btn btn-primary">
+        بازگشت
+        </a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

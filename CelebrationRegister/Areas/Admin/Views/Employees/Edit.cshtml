@@ -1,0 +1,66 @@
+﻿@model CelebrationRegister.Data.Entities.Employee
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_DefaultLayout.cshtml";
+}
+
+
+<form asp-action="Edit">
+    <div class="panel panel-warning">
+        <div class="panel-heading">
+            ویرایش اطلاعات کارمند
+        </div>
+        <div class="panel-body">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+                    <input type="hidden" asp-for="EmployeeId" />
+                    <input asp-for="FirstLogin" type="hidden"/>
+                    <div class="form-group">
+                        <label asp-for="NationalCode" class="control-label"></label>
+                        <input asp-for="NationalCode" class="form-control" />
+                        <span asp-validation-for="NationalCode" class="text-danger"></span>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label asp-for="ProsonnelCode" class="control-label"></label>
+                        <input asp-for="ProsonnelCode" class="form-control" />
+                        <span asp-validation-for="ProsonnelCode" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="col-md-6">
+
+                    <div class="form-group">
+                        <label asp-for="FullName" class="control-label"></label>
+                        <input asp-for="FullName" class="form-control" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ChildCount" class="control-label"></label>
+                        <input asp-for="ChildCount" class="form-control" />
+                        <span asp-validation-for="ChildCount" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+
+                    <div class="form-group">
+                        <input type="submit" value="ویرایش اطلاعات" class="btn btn-warning" />
+                        <a asp-action="Index" class="btn btn-primary"> بازگشت به فهرست </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

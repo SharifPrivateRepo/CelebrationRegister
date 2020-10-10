@@ -1,0 +1,188 @@
+/*#region Body*/
+
+@font-face {
+    font-family: "iran Sans";
+    src: url('../fonts/BRoya.ttf') format('ttf');
+    src: url('../fonts/BRoya.eot') format('eot');
+    src: url('../fonts/BRoya.woff') format('woff');
+}
+
+body {
+    font-family: 'iran Sans', sans-serif;
+    direction: rtl;
+    font-size: 22px;
+    margin: auto;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+li {
+    list-style-type: none;
+}
+
+header {
+    width: 100%;
+}
+
+
+/*#endregion Body*/
+
+
+/*#region Header*/
+
+.img-header {
+    width: 100%;
+}
+
+.header {
+    margin-bottom: 1%;
+}
+
+.header li {
+    font-size: 80%;
+}
+
+
+/*#endregion Header*/
+
+
+/*#region Main*/
+
+.main {
+    display: flex;
+}
+
+.side-bar {
+    width: 100%;
+    border: 1px solid #03A9F4;
+    border-radius: 5px;
+    margin: 3% 0%;
+    padding: 0%;
+}
+
+.news-box {
+    width: 100%;
+    border: 1px solid #03A9F4;
+    border-radius: 5px;
+    margin: 1% 0%;
+    padding: 0%;
+}
+
+.panel {
+    border: 1px solid #03A9F4;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    margin: 0%;
+    width: 100%;
+    height: fit-content;
+    background-color: #03A9F4;
+    padding: 3px 25px;
+}
+
+.side-bar-items ul {
+    margin: 3% 0%;
+    padding: 0% 4%;
+}
+
+.side-bar-items .items h6 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.items {
+    border-bottom: 3px solid #E0E0E0;
+}
+
+.items h2 {
+    font-size: 120%;
+}
+
+.items h6 {
+    font-size: 75%;
+}
+
+.last-news ul {
+    margin: 2% 1%;
+    padding: 0%;
+}
+
+.news {
+    height: 150px;
+    border-bottom: 5px solid #E0E0E0;
+    margin: 0%;
+}
+
+.news img {
+    padding-top: 1%;
+    width: 150px;
+    height: 120px;
+}
+
+.news p {
+    width: 100%;
+    height: 50px;
+    font-size: 80%;
+}
+
+.news h2 {
+    font-size: 110%;
+}
+
+.news .col-9 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/*#endregion Main*/
+
+
+/*#region login*/
+
+.login {
+    width: 100%;
+    height: fit-content;
+    border-radius: 5px;
+    padding: 0%;
+    box-shadow: 0px 2px 10px #616161;
+    margin: auto;
+}
+
+.login .panel {
+    width: 100%;
+    height: fit-content;
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+    color: white;
+}
+
+.login .form-group {
+    padding: 5% 5%;
+}
+
+.login .form-group button {
+    margin: 5% 0%;
+    float: left;
+}
+
+
+/*#endregion login*/
+
+
+/*#region Footer*/
+
+.footer {
+    margin-top: 2%;
+    width: 100%;
+    height: 100px;
+    background-color: #153248;
+    background-image: url("../images/footer-pattern.png");
+    color: white;
+}
+
+
+/*#endregion Footer*/

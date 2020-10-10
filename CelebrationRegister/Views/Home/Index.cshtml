@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Notification>
+@{
+    ViewData["Title"] = "Home Page";
+
+}
+
+<main>
+    <div class="container main" id="main">
+        <div class="col-md-12 col-sm-12 col-lg-8">
+            <div class="news-box">
+                <div class="panel">
+                    آخرین اطلاعیه ها
+                </div>
+
+                <div class="last-news">
+                    <ul>
+                        @foreach (var item in Model)
+                        {
+                            <li>
+                                <div class="news row">
+                                    <img class="rounded float-left col-3" src="/NotificationImages/@item.Image" alt="تصویر خبر @item.Title">
+                                    <div class="col-8">
+                                        <a href="#">
+                                            <h2>@item.Title </h2>
+                                        </a>
+                                        <p>
+                                            @item.ShortDescription
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 col-sm-12 col-lg-4">
+           <partial name="_SideBarPartial"/>
+        </div>
+    </div>
+
+</main>

@@ -1,0 +1,52 @@
+﻿@using CelebrationRegister.Core.Convertors
+@model CelebrationRegister.Data.Entities.Notification
+
+@{
+    ViewData["Title"] = "حذف کاربر";
+}
+
+<h1>Delete</h1>
+
+<h3>آیا از حذف کاربر این خبر مطمئن هستید؟</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ShortDescription)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ShortDescription)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Text)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Text)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Image)
+        </dt>
+        <dd class = "col-sm-10">
+            <img src="/NotificationImages/@Model.Image" style=" width: 284px;height: 177px;" />
+
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CreateDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.CreateDate.ToShamsi()
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="NotificationId" />
+        <input type="submit" value="حذف" class="btn btn-danger" /> |
+        <a asp-action="Index" class="btn btn-info">بازگشت</a>
+    </form>
+</div>

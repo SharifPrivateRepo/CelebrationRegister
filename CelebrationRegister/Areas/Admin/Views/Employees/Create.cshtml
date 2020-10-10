@@ -1,0 +1,80 @@
+﻿@model CelebrationRegister.Data.Entities.Employee
+
+@{
+    ViewData["Title"] = "افزودن کارمند";
+    Layout = "~/Areas/Admin/Views/Shared/_DefaultLayout.cshtml";
+}
+
+<h1>ثبت کارمند جدید</h1>
+
+<hr />
+
+<form asp-action="Create">
+
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            ورود اطلاعات کارمند جدید
+        </div>
+        <div class="panel-body">
+            @if(ViewData["IsExist"] != null)
+            {
+                <div class="alert alert-danger">
+                    کارمندی با کدملی یا شماره پرسنلی قبلا ثبت شده است !
+                </div>
+            }
+            <div class="row">
+                <div class="col-md-6">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+                    <div class="form-group">
+                        <label asp-for="NationalCode" class="control-label"></label>
+                        <input asp-for="NationalCode" class="form-control" />
+                        <span asp-validation-for="NationalCode" class="text-danger"></span>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label asp-for="ProsonnelCode" class="control-label"></label>
+                        <input asp-for="ProsonnelCode" class="form-control" />
+                        <span asp-validation-for="ProsonnelCode" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="FullName" class="control-label"></label>
+                        <input asp-for="FullName" class="form-control" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label asp-for="ChildCount" class="control-label"></label>
+                        <input asp-for="ChildCount" class="form-control" />
+                        <span asp-validation-for="ChildCount" class="text-danger"></span>
+                    </div>
+
+
+                </div>
+                <div class="col-md-4">
+
+                    <div class="form-group">
+                        <input type="submit" value="ثبت اطلاعات" class="btn btn-success" />
+                        <a asp-action="Index" class="btn btn-warning"> بازگشت </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

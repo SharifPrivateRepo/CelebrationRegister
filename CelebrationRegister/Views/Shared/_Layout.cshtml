@@ -1,0 +1,94 @@
+﻿<html lang="fa">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ثبت نام جشن تحصیلی</title>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="/js/jquery-3.5.1.slim.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"> -->
+    <!-- Latest compiled and minified CSS -->
+    @*<link rel="stylesheet" href="/css/bootstrap.min.css" >
+        <link rel="stylesheet" href="/css/bootstrap-rtl.min.css" >*@
+    <link rel="stylesheet" href="/css/bootstrapRTL.min.css">
+    @RenderSection("StyleSheet",false)
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="/js/bootstrap.min.js"></script>
+
+
+    <!-- import ZMDI material icon  -->
+    <link rel="stylesheet" href="/css/material-design-iconic-font.min.css">
+
+    <!-- import CSS file -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/panel-style.css">
+
+    <!-- Optional JavaScript -->
+    <script src="/js/index-edited.js"></script>
+
+    <link rel="stylesheet" href="/MdBootstrapPersianDateTimePicker/jquery.Bootstrap-PersianDateTimePicker.min.css" />
+
+</head>
+
+<body>
+    <header class="container-fluid bg-dark header">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">ثبت نام جشن تحصیلی</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/">خانه <span class="sr-only">(current)</span></a>
+                    </li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="UserPanel" asp-controller="Home" asp-action="Index">ارسال مدارک</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-success" href="/UserPanel" > @User.Identity.Name عزیز خوش آمدید!</a>
+                        </li>
+                        <li class="nav-item text-danger">
+                            <a class="nav-link text-danger" href="Logout"> خروج </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Login"> ورود </a>
+                        </li>
+                    }
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="جستجو" aria-label="Search">
+                    <button class="btn btn-success my-2 my-sm-0" type="submit">جستجو</button>
+                </form>
+            </div>
+        </nav>
+
+        <img class="img-header" src="/images/header.jpg" alt="تصویر شرکت توزیع نیروی برق استان سمنان">
+    </header>
+
+    @RenderBody()
+
+    <footer>
+        <div class="footer">
+            <div class="container">
+                نقل و نشر مطالب با ذکر نام سایت شرکت توزیع نیروی برق استان سمنان بلامانع است.
+            </div>
+
+        </div>
+    </footer>
+    <script src="/js/index-edited.js"></script>
+    @RenderSection("Scripts", false)
+</body>
+
+</html>

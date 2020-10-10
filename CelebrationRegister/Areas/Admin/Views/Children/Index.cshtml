@@ -1,0 +1,86 @@
+﻿@model IEnumerable<CelebrationRegister.Data.Entities.Child>
+
+@{
+    ViewData["Title"] = "لیست فرزندان ثبت شده";
+    Layout = "~/Areas/Admin/Views/Shared/_DefaultLayout.cshtml";
+
+    int pageId = (int)ViewData["pageId"];
+    int currentPage = (int)ViewData["currentPage"];
+    int take = (int)ViewData["take"];
+    int userCount = (int)ViewData["UserCount"];
+
+}
+
+<h1>لیست فرزندان ثبت شده</h1>
+
+<p>
+    <a class="btn btn-success" asp-area="Admin" asp-controller="Children" asp-action="Create">
+        افزودن فرزند
+    </a>
+</p>
+<table class="table table-hover table-bordered">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Image)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReportCardId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Grade)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Employee)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <img style="max-width: 150px" src="/Information/PersonalImage/@item.Employee.FullName/@item.Image"/>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReportCardId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Grade.GradeTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Employee.FullName)
+                </td>
+                <td>
+                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.ChildId"> ویرایش </a> |
+                    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.ChildId"> مشاهده جزئیات </a> |
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ChildId"> حذف </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        <li class="page-item @((currentPage > 1 && pageId <= (userCount/take) )? "" : "disabled")">
+            <a class="page-link" asp-area="Admin" asp-controller="Children" asp-action="Index" asp-route-pageId="@(currentPage-1)" asp-route-take="1" tabindex="-1">قبلی</a>
+        </li>
+        @for (int i = 0; i < userCount / take; i++)
+        {
+            <li class="page-item">
+                <a class="page-link @((currentPage == pageId) ? "active" :"")" asp-area="Admin" asp-controller="Children" asp-action="Index" asp-route-pageId="@(i+1)" asp-route-take="1">@(i+1)</a>
+            </li>
+        }
+        <li class="page-item @((currentPage > 1 && pageId <= (userCount/take) )? "disabled" : "")">
+            <a class="page-link" asp-area="Admin" asp-controller="Children" asp-action="Index" asp-route-pageId="@(currentPage+1)" asp-route-take="1">بعدی</a>
+        </li>
+    </ul>
+</nav>

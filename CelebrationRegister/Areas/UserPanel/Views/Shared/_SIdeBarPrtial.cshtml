@@ -1,0 +1,48 @@
+﻿@using CelebrationRegister.Core.Services.Interfaces
+@using CelebrationRegister.Data.Entities
+@inject IUserServices _UserServices
+@{
+    Employee employee = await _UserServices.GetEmployeeByIdAsync(User.Identity.Name);
+}
+<div class="panel-side-bar col-sm-4">
+    <div class="info">
+        <div class="panel">
+            اطلاعات کاربری
+        </div>
+        <div class="user-info">
+            <label>نام و نام خانوادگی همکار : @employee.FullName </label>
+            <br>
+            <label>کدپرسنلی : @employee.ProsonnelCode </label>
+        </div>
+    </div>
+    <div class="info">
+        <div class="panel">
+            دسترسی
+        </div>
+        <ul>
+            <li>
+                <a asp-area="UserPanel" asp-controller="Home" asp-action="Index"> پنل کاربری </a>
+            </li>
+            <li>
+                @if (employee.ChildCount == employee.Children.Count)
+                {
+                    <a>
+                        ارسال مدارک
+                        <span class="badge badge-success badge-pill"> تکمیل شده </span>
+                    </a>
+                }
+                else
+                {
+                    <a asp-area="UserPanel" asp-controller="Home" asp-action="Register" asp-route-employeeId="@employee.EmployeeId">
+                        ارسال مدارک
+                        <span class="badge badge-danger">@employee.Children.Count</span> /
+                        <span class="badge badge-primary">@employee.ChildCount</span>
+                    </a>
+                }
+            </li>
+            <li>
+                <a asp-controller="Account" asp-action="Logout" class="text-danger"> خروج از حساب کاربری </a>
+            </li>
+        </ul>
+    </div>
+</div>

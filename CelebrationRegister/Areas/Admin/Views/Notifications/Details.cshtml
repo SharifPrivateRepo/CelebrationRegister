@@ -1,0 +1,49 @@
+﻿@using CelebrationRegister.Core.Convertors
+@model CelebrationRegister.Data.Entities.Notification
+
+@{
+    ViewData["Title"] = "جزئیات اطلاعیه";
+}
+
+<h1>مشاهده جزئیات اطلاعیه</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ShortDescription)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ShortDescription)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Text)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Text)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Image)
+        </dt>
+        <dd class = "col-sm-10">
+            <img src="/NotificationImages/@Model.Image" style=" width: 284px;height: 177px;" />
+
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CreateDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.CreateDate.ToShamsi()
+        </dd>
+    </dl>
+</div>
+<div>
+    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.NotificationId">ویرایش</a> |
+    <a class="btn btn-info" asp-action="Index">بازگشت</a>
+</div>

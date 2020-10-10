@@ -1,0 +1,25 @@
+﻿@inject INotificationServices _NotificationServices
+@{
+    List<Notification> notifications = _NotificationServices.GetAllNotification(5);
+}
+<div class="side-bar">
+    <div class="panel">
+        آرشیو اطلاعیه ها
+    </div>
+    <div class="side-bar-items">
+        <ul>
+            @foreach (var item in notifications)
+            {
+                <li>
+                    <div class="items">
+                        <a href="#">
+                            <h2>@item.Title</h2>
+                        </a>
+                        <h6>@item.ShortDescription</h6>
+                    </div>
+                </li>
+
+            }
+            </ul>
+    </div>
+</div>

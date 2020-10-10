@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20200914062836_mig_status.cs" />
+    <Compile Remove="Migrations\20200914062836_mig_status.Designer.cs" />
+    <Compile Remove="Migrations\20200914063040_mig_status.cs" />
+    <Compile Remove="Migrations\20200914063040_mig_status.Designer.cs" />
+    <Compile Remove="Migrations\20201006193313_mig_settingTable.cs" />
+    <Compile Remove="Migrations\20201006193313_mig_settingTable.Designer.cs" />
+    <Compile Remove="Migrations\20201008160645_mig_add_city_table.cs" />
+    <Compile Remove="Migrations\20201008160645_mig_add_city_table.Designer.cs" />
+    <Compile Remove="Migrations\20201008162238_mig_add_city_table.cs" />
+    <Compile Remove="Migrations\20201008162238_mig_add_city_table.Designer.cs" />
+    <Compile Remove="Migrations\20201008162500_mig_add_city_table.cs" />
+    <Compile Remove="Migrations\20201008162500_mig_add_city_table.Designer.cs" />
+    <Compile Remove="Migrations\20201008163114_mig_add_city_table.cs" />
+    <Compile Remove="Migrations\20201008163114_mig_add_city_table.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MD.BootstrapPersianDateTimePicker" Version="2.3.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
+  </ItemGroup>
+
+</Project>

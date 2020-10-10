@@ -1,0 +1,109 @@
+﻿@model CelebrationRegister.Data.Entities.Child
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_DefaultLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">
+            مدیریت فرزندان کارکنان
+        </h1>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <div class="col-lg-8">
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <i class="zmdi zmdi-network-warning"></i>
+                ویرایش اطلاعات فرزند
+            </div>
+            <div class="panel-body">
+
+                <h4>نام پدر / مادر : "@Model.Employee.FullName"</h4>
+                <hr />
+                <div class="row">
+                    <div class="col-md-6">
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="ChildId" />
+                        <div class="form-group">
+                            <label asp-for="EmployeeId" class="control-label">نام پدر / مادر</label>
+                            <select disabled="" asp-for="EmployeeId" class="form-control" asp-items="ViewBag.EmployeeId"></select>
+                            <span asp-validation-for="EmployeeId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="FullName" class="control-label"></label>
+                            <input asp-for="FullName" class="form-control" />
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="GradeId" class="control-label"></label>
+                            <select asp-for="GradeId" class="form-control" asp-items="ViewBag.GradeId"></select>
+                            <span asp-validation-for="GradeId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="IsDelete" /> @Html.DisplayNameFor(model => model.IsDelete)
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+
+                </div>
+
+                <div>
+                    <a asp-action="Index">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                اطلاعات تصویر و کارنامه
+            </div>
+            <div class="panel-body">
+
+
+                <div class="form-group">
+                    <label asp-for="Image" class="control-label"></label>
+                    <img style="width: 100%; height: 300px" class="img-thumbnail" src="/Information/PersonalImage/@Model.Employee.FullName/@Model.Image" />
+                    <input type="file" name="imgPersonal" class="form-control" />
+                    <span asp-validation-for="Image" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ReportCardId" class="control-label"></label>
+                    @if (Model.ReportCards.Any())
+                    {
+                        <img style="width: 100%; height: 300px" class="img-thumbnail" src="/Information/ReportCard/@Model.Employee.FullName/@Model.ReportCards.LastOrDefault().ReportCardImage" />
+                    }
+                    else
+                    {
+                        <img style="width: 100%; height: 300px" class="img-thumbnail" src="/Information/ReportCard/NoPhoto.png" />
+                    }
+                    <input type="file" name="imgReportcard" class="form-control" />
+                    <span asp-validation-for="ReportCardId" class="text-danger"></span>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</form>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,229 @@
+﻿@using CelebrationRegister.Core.Services.Interfaces
+@using CelebrationRegister.Data.Entities
+@model IEnumerable<CelebrationRegister.Data.Entities.Employee>
+@inject ISettingServices _settingServices
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_DefaultLayout.cshtml";
+
+    List<City> cityItems = new List<City>()
+{
+        new City()
+        {
+            CityId = 0,
+            CityName = "انتخاب کنید"
+        }
+    };
+    cityItems.AddRange(_settingServices.GetCityList());
+    SelectList cityList = new SelectList(cityItems, "CityId", "CityName");
+
+    int pageId = (int)ViewData["pageId"];
+    int currentPage = (int)ViewData["currentPage"];
+    int take = (int)ViewData["take"];
+    int userCount = (int)ViewData["UserCount"];
+
+    string filter = (string)ViewData["filter"];
+    int cityId = (int)ViewData["CityId"];
+    string personalCode = (string)ViewData["personalCode"];
+
+
+}
+
+<h1> لیست کارمندان ثبت شده </h1>
+
+<div class="row">
+
+    <div class="col-md-8">
+        <form asp-area="Admin" asp-controller="Employees" asp-action="Index" method="get" style="display: flex">
+            <input class="form-control" type="text" value="@(filter ?? "")" placeholder="...نام و نام خانوادگی را وارد کنید" name="filter" />
+            <button class="btn btn-success" type="submit">
+                <i class="zmdi zmdi-search"></i>
+            </button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AdvanceSearch">
+                جستجوی پیشرفته
+            </button>
+        </form>
+    </div>
+
+    <div class="col-md-2">
+        <a asp-area="Admin" asp-controller="Employees" asp-action="Create" class="btn-block btn btn-success"> ثبت کارمند جدید</a>
+    </div>
+    <!-- Button trigger modal -->
+    <div class="col-md-2">
+        <button type="button" class="btn btn-warning btn-block" data-toggle="modal" data-target="#ImportFileModal">
+            افزودن گروهی کارمندان
+        </button>
+    </div>
+
+
+</div>
+
+<div class="row">
+    @if (ViewData["AddResult"] != null)
+    {
+
+        @if ((bool)ViewData["AddResult"] == true)
+        {
+            <div class="alert alert-success">
+                <i class="zmdi zmdi-check-all"></i>
+                اطلاعات با موفقیت اضافه شدند
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-danger">
+                عملیات افزودن با خطا مواجه شد.
+            </div>
+        }
+
+    }
+</div>
+
+
+@if ((userCount / take) > 0)
+{
+    <p>
+        صفحه @currentPage از @(userCount / take) صفحه .
+    </p>
+}
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr class="table-success bg-success">
+            <th>
+                @Html.DisplayNameFor(model => model.NationalCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProsonnelCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ChildCount)
+            </th>
+            <th>محل خدمت</th>
+            <th></th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NationalCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProsonnelCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChildCount)
+                    <a class="btn btn-primary btn-bitbucket" asp-area="Admin" asp-controller="Children" asp-action="Index" asp-route-employeeId="@item.EmployeeId"> مشاهده اطلاعات فرزندان </a>
+                </td>
+                <td>
+                    @item.City.CityName
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.EmployeeId" class="btn btn-warning"> ویرایش </a> |
+                    <a asp-action="Details" asp-route-id="@item.EmployeeId" class="btn btn-info"> مشاهده جزئیات</a> |
+                    <a asp-action="Delete" asp-route-id="@item.EmployeeId" class="btn btn-danger"> حذف </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+
+</table>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        <li class="page-item @((currentPage > 1 && pageId <= (userCount/take) )? "" : "disabled")">
+            <a class="page-link" asp-area="Admin" asp-controller="Employees" asp-action="Index"
+               asp-route-pageId="@(currentPage-1)" asp-route-take="20" asp-route-filter="@filter" asp-route-personalCode="@personalCode" asp-route-cityId="@cityId"
+               tabindex="-1">قبلی</a>
+        </li>
+        @for (int i = 0; i < userCount / take; i++)
+        {
+            <li class="page-item">
+                <a class="page-link @((currentPage == pageId +1) ? "active" :"")" asp-area="Admin" asp-controller="Employees" asp-action="Index"
+                   asp-route-pageId="@(i+1)" asp-route-take="20" asp-route-filter="@filter" asp-route-personalCode="@personalCode" asp-route-cityId="@cityId">@(i+1)</a>
+            </li>
+        }
+        <li class="page-item @((currentPage > 1 && pageId <= (userCount/take) )? "disabled" : "")">
+            <a class="page-link" asp-area="Admin" asp-controller="Employees" asp-action="Index"
+               asp-route-pageId="@(currentPage+1)" asp-route-take="20" asp-route-filter="@filter" asp-route-personalCode="@personalCode" asp-route-cityId="@cityId">بعدی</a>
+        </li>
+    </ul>
+</nav>
+
+
+<!-- Modal Import File -->
+<form method="post" asp-area="Admin" asp-controller="Employees" asp-action="ImportData" enctype="multipart/form-data">
+    <div class="modal fade" id="ImportFileModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">افزودن گروهی کارمندان</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div style="display: flex; flex-direction: column; justify-content: space-between">
+
+                        <p>ارسال فایل اکسل برای وارد کردن اطلاعات</p>
+                        <input class="form-control-file" type="file" name="excelFile" />
+                        @* <input class="btn btn-primary col-md-3" type="submit" value=" ارسال فایل " />*@
+                        <a href="#" class="btn btn-warning">دریافت فایل نمونه</a>
+                        <p class="text-info">
+                            <i class="zmdi zmdi-help"></i>
+                            توجه کنید که فایل ارسالی باید تکمیل شده ی فایل نمونه باشد در غیر این صورت عملیات ثبت با خطا مواجه می شود.
+                        </p>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">بازگشت</button>
+                    <button type="submit" class="btn btn-success">ثبت و ارسال فایل</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- Modal Advance Search -->
+<form method="get" asp-area="Admin" asp-controller="Employees" asp-action="Index">
+    <div class="modal fade" id="AdvanceSearch" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">جستجوی پیشرفته</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div style="display: flex; flex-direction: column; justify-content: space-between">
+                        <label> نام و نام خانوادگی </label>
+                        <input type="text" class="form-control" name="filter" />
+                        <label>شماره پرسنلی</label>
+                        <input type="text" class="form-control" name="personalCode" />
+                        <label>محل خدمت</label>
+                        <select class="form-control" asp-items="@cityList" name="cityId"></select>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">بازگشت</button>
+                    <button type="submit" class="btn btn-success"> جستجو </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
