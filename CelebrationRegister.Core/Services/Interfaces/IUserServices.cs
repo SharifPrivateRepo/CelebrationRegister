@@ -37,8 +37,10 @@ namespace CelebrationRegister.Core.Services.Interfaces
         Task<SelectList> GetAllGradesList();
         Task<List<Grade>> GetAllDeletedGrades();
         Task AddGradeAsync(Grade grade);
+        Task UpdateGradeAsync(int gradeId, string gradeTitle);
         Task DeleteGradeAsync(int gradeId);
         List<Grade> GetAllGrade();
+        Grade GetGradeById(int gradeId);
 
         #endregion
 

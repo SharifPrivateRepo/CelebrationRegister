@@ -120,7 +120,7 @@ namespace CelebrationRegister.Web.Areas.UserPanel.Controllers
         {
             DateTime birthday = DateConvertor.ToMiladi(child.Birthday);
 
-            var maxDate = await _settingServices.GetBirthDayLimitation();
+            var maxDate = _settingServices.GetBirthDayLimitation();
 
 
             if (!ModelState.IsValid || (birthday < maxDate))

@@ -226,7 +226,8 @@ namespace CelebrationRegister.Data.Migrations
 
                     b.Property<string>("ImageName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
 
                     b.Property<int?>("ReportCardId")
                         .HasColumnType("int");
@@ -407,7 +408,7 @@ namespace CelebrationRegister.Data.Migrations
             modelBuilder.Entity("CelebrationRegister.Data.Entities.OptionalDetails", b =>
                 {
                     b.HasOne("CelebrationRegister.Data.Entities.Child", "Child")
-                        .WithMany()
+                        .WithMany("OptionalDetails")
                         .HasForeignKey("ChildId");
 
                     b.HasOne("CelebrationRegister.Data.Entities.DetailTitle", "DetailTitle")

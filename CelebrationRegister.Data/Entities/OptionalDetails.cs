@@ -12,6 +12,7 @@ namespace CelebrationRegister.Data.Entities
 
         [Display(Name = "تصویر")]
         [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
+        [MaxLength(200, ErrorMessage = "{0} نمی تواند بیشتر از {1} کاراکتر باشد .")]
         public string ImageName { get; set; }
 
         public int? ChildId { get; set; }
@@ -24,7 +25,9 @@ namespace CelebrationRegister.Data.Entities
         #region Relation
 
         public Child Child { get; set; }
+
         public Employee Employee { get; set; }
+
         public DetailTitle DetailTitle { get; set; }
 
 

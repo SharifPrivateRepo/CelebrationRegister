@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CelebrationRegister.Core.Services.Interfaces;
@@ -165,6 +166,11 @@ namespace CelebrationRegister.Web.Areas.Admin.Controllers
             ViewData["take"] = 20;
             ViewData["UserCount"] = await _userServices.GetNumberOfEmployeeAsync();
 
+            ViewData["filter"] = null;
+            ViewData["CityId"] = 0;
+            ViewData["personalCode"] = null;
+
+
             if (_userServices.ImportDataFromExcelFile(fileName))
             {
                 ViewData["AddResult"] = true;
@@ -176,6 +182,22 @@ namespace CelebrationRegister.Web.Areas.Admin.Controllers
 
             return View("Index", await _userServices.GetEmployeesAsync(1, 20));
 
+        }
+
+        public IActionResult DownloadExcelFormat()
+        {
+
+            if (User.Identity.IsAuthenticated)
+            {
+                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/GuideFile", "Default-Excel-Format.xlsx");
+
+                byte[] file = System.IO.File.ReadAllBytes(filePath);
+                return File(file, "application/force-download", "Default-Excel-Format.xlsx");
+            }
+            else
+            {
+                return Forbid();
+            }
         }
 
     }

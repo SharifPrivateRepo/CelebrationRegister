@@ -19,9 +19,10 @@
                             <li>
                                 <div class="news row">
                                     <img class="rounded float-left col-3" src="/NotificationImages/@item.Image" alt="تصویر خبر @item.Title">
+
                                     <div class="col-8">
-                                        <a href="#">
-                                            <h2>@item.Title </h2>
+                                        <a href="/home/news/@item.NotificationId">
+                                            <h2> @item.Title </h2>
                                         </a>
                                         <p>
                                             @item.ShortDescription
@@ -36,7 +37,7 @@
             </div>
         </div>
         <div class="col-md-12 col-sm-12 col-lg-4">
-           <partial name="_SideBarPartial"/>
+            <partial name="_SideBarPartial" />
         </div>
     </div>
 

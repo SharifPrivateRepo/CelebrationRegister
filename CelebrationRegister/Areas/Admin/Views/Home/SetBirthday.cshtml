@@ -10,7 +10,9 @@
     <script src="/js/Persian-calender/persian-date.min.js"></script>
     <script src="/js/Persian-calender/persian-datepicker.min.js"></script>
 }
-
+@{
+    var time = (string) ViewData["Time"];
+}
 <form asp-area="Admin" asp-controller="Home" asp-action="SetBirthday">
     <div class="panel panel-success">
         <div class="panel-heading">
@@ -20,10 +22,7 @@
         <div class="panel-body">
             <div class="form-group">
                 <label>حداقل تاریخ </label>
-                <input type="text" id="time" name="date" class="form-control" onchange="SetBirthday()">
-                <p class="help-block">
-                    نام مقطع به همین صورت به کاربر نمایش داده می شود.
-                </p>
+                <input type="text" id="time" name="date" class="form-control" onchange="SetBirthday()" value="@time">
             </div>
             <div class="form-group">
                 <input type="submit" value=" ثبت " class="btn btn-success">

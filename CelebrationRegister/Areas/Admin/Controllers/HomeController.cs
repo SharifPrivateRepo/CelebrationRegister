@@ -39,6 +39,7 @@ namespace CelebrationRegister.Web.Areas.Admin.Controllers
 
         public IActionResult SetBirthday()
         {
+               ViewData["Time"] =_settingServices.GetBirthDayLimitation().ToShamsi();
             return View();
         }
 
@@ -48,6 +49,7 @@ namespace CelebrationRegister.Web.Areas.Admin.Controllers
             DateTime newDate = DateConvertor.ToMiladi(date);
             
             _settingServices.SetBirthDayLimitation(newDate);
+            ViewData["Time"] = _settingServices.GetBirthDayLimitation().ToShamsi();
             return View();
         }
 
@@ -55,12 +57,16 @@ namespace CelebrationRegister.Web.Areas.Admin.Controllers
 
         #region Grade
 
-        public async Task<IActionResult> Grade(int type = 1)
+        public async Task<IActionResult> Grade(int type = 1, int gradeId = -1)
         {
             ViewData["gradeTitle"] = "افزودن مقطع تحصیلی";
             if (type == 1)
             {
                 ViewData["DeletedList"] = true;
+                if(gradeId != -1)
+                {
+                    ViewData["Grade"] = _userServices.GetGradeById(gradeId);
+                }
                 return View(await _userServices.GetAllGradesAsync());
             }
             else
@@ -69,7 +75,7 @@ namespace CelebrationRegister.Web.Areas.Admin.Controllers
                 return View(await _userServices.GetAllDeletedGrades());
             }
         }
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddGrade(string gradeTitle)
@@ -80,6 +86,18 @@ namespace CelebrationRegister.Web.Areas.Admin.Controllers
             {
                 GradeTitle = gradeTitle
             });
+
+            return RedirectToAction("Grade");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateGrade(string gradeTitle, int gradeId)
+        {
+            ViewData["gradeTitle"] = "افزودن مقطع تحصیلی";
+
+
+            await _userServices.UpdateGradeAsync(gradeId,gradeTitle);
 
             return RedirectToAction("Grade");
         }

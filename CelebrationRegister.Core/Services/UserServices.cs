@@ -249,6 +249,14 @@ namespace CelebrationRegister.Core.Services
             await db.SaveChangesAsync();
         }
 
+        public async Task UpdateGradeAsync(int gradeId, string gradeTitle)
+        {
+            var grade =GetGradeById(gradeId);
+            grade.GradeTitle = gradeTitle;
+            db.Grades.Update(grade);
+            await db.SaveChangesAsync();
+        }
+
         public async Task DeleteGradeAsync(int gradeId)
         {
             var grade = await db.Grades.FindAsync(gradeId);
@@ -260,6 +268,11 @@ namespace CelebrationRegister.Core.Services
         public List<Grade> GetAllGrade()
         {
             return db.Grades.ToList();
+        }
+
+        public Grade GetGradeById(int gradeId)
+        {
+            return db.Grades.Find(gradeId);
         }
 
         public async Task<List<Child>> GetAllChildrenAsync(int employeeId = 0, int pageId = 1, int take = 10)

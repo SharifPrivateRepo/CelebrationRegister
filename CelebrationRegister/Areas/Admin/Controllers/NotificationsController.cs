@@ -109,8 +109,11 @@ namespace CelebrationRegister.Web.Areas.Admin.Controllers
             {
                 try
                 {
-                    notification.Image = ImageTools.UpdateImage(notifImage, "NotificationImages", "default-notification.jpg",
-                         notification.Image);
+                    if (notifImage != null)
+                    {
+                        notification.Image = ImageTools.UpdateImage(notifImage, "NotificationImages", "default-notification.jpg",
+                             notification.Image);
+                    }
                     _notificationServices.UpdateNotification(notification);
                     _notificationServices.Save();
                 }

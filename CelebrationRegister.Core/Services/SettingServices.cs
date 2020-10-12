@@ -33,9 +33,9 @@ namespace CelebrationRegister.Core.Services
             db.SaveChanges();
         }
 
-        public async Task<DateTime> GetBirthDayLimitation()
+        public DateTime GetBirthDayLimitation()
         {
-            var setting =await db.Settings.FindAsync(1);
+            var setting = db.Settings.Find(1);
             return setting.BirthDayLimitation.Value;
         }
 

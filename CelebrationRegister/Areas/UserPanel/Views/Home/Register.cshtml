@@ -7,7 +7,7 @@
     var items = ViewData["GradeList"] as List<Grade>;
     SelectList list = new SelectList(items, "GradeId", "GradeTitle");
     int employeeId = (int)ViewData["EmployeeId"];
-    
+
 
 }
 
@@ -54,7 +54,7 @@
                                     <i class="zmdi zmdi-help"></i>
                                     برای استفاده از تقویم شمسی روی متن تاریخ کلیک کنید.
                                 </label>
-                                <label  id="info" class="help-block text-danger" style="font-size: small;display: none">
+                                <label id="info" class="help-block text-danger" style="font-size: small;display: none">
                                     <i class="glyphicon glyphicon-warning"></i>
                                     لطفا تاریخ را فقط از طریق پنل تاریخ وارد کنید!
                                 </label>
@@ -133,7 +133,7 @@
     </div>
 </main>
 @{
-    var limitDate = await _settingServices.GetBirthDayLimitation();
+    var limitDate = _settingServices.GetBirthDayLimitation();
     int year = limitDate.Year;
     int mouth = limitDate.Month;
     int day = limitDate.Day;
@@ -150,7 +150,7 @@
                 initialValue: false,
                 initialValueType: 'persian',
                 autoClose: true,
-                minDate: new Date(@year, @mouth, @day),
+                minDate: new Date(@year, @mouth-1, @day),
                 maxDate: 'today'
             });
         });
@@ -251,7 +251,7 @@
 
         function changedOptional() {
             if (optionalDetails.checked) {
-               // optionalFields.style.display = "flex";
+                // optionalFields.style.display = "flex";
                 optionalFields.style.height = "470px";
                 optionalFields.style.opacity = 1;
             } else {

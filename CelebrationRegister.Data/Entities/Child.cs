@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace CelebrationRegister.Data.Entities
 {
     public class Child
     {
-        public Child()
-        {
-
-        }
-
+        [Key]
         public int ChildId { get; set; }
+
         public int EmployeeId { get; set; }
 
         [Display(Name = "نام و نام خانوادگی")]
@@ -41,10 +37,7 @@ namespace CelebrationRegister.Data.Entities
         [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
         public DateTime Birthday { get; set; }
 
-
         public bool IsDelete { get; set; }
-
-
 
         #region Relation
 
@@ -52,8 +45,11 @@ namespace CelebrationRegister.Data.Entities
         public Grade Grade { get; set; }
 
         [Display(Name = "پدر / مادر")]
-        public virtual Employee Employee { get; set; }
-        public virtual List<ReportCard> ReportCards { get; set; }
+        public Employee Employee { get; set; }
+
+        public List<ReportCard> ReportCards { get; set; }
+
+        public List<OptionalDetails> OptionalDetails { get; set; }
 
         #endregion
     }

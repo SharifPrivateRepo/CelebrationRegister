@@ -1,4 +1,9 @@
-﻿@model List<CelebrationRegister.Data.Entities.Grade>
+﻿@using CelebrationRegister.Data.Entities
+@model List<CelebrationRegister.Data.Entities.Grade>
+
+@{
+    var grade = ViewData["Grade"] as Grade;
+}
 <div class="row">
     <div class="col-lg-12">
         <h1 class="page-header">مدیریت پایه های تحصیلی</h1>
@@ -49,7 +54,7 @@
                                         <td>
                                             @if ((bool)ViewData["DeletedList"])
                                             {
-                                                <a class="btn btn-warning btn-sm" asp-area="Admin" asp-controller="Home" asp-action="">
+                                                <a class="btn btn-warning btn-sm" asp-area="Admin" asp-controller="Home" asp-action="Grade" asp-route-gradeId="@item.GradeId">
                                                     ویرایش
                                                 </a>
                                                 <span>|</span>
@@ -74,7 +79,7 @@
     </div>
 
     <div class="col-md-6">
-        <form asp-area="Admin" asp-controller="Home" asp-action="AddGrade">
+        <form method="post" asp-area="Admin" asp-controller="Home" asp-action="@((grade == null) ? "AddGrade":"UpdateGrade" )">
 
             <div class="panel panel-success">
                 <div class="panel-heading">
@@ -84,7 +89,11 @@
                 <div class="panel-body">
                     <div class="form-group">
                         <label>نام مقطع تحصیلی</label>
-                        <input id="gradeTitle" name="gradeTitle" class="form-control">
+                        @if(grade != null)
+                        {
+                            <input type="hidden" value="@grade.GradeId" name="gradeId"/>
+                        }
+                        <input id="gradeTitle" name="gradeTitle" class="form-control" value="@((grade != null)?grade.GradeTitle:"")">
                         <p class="help-block">
                             نام مقطع به همین صورت به کاربر نمایش داده می شود.
                         </p>

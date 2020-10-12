@@ -14,11 +14,13 @@ namespace CelebrationRegister.Core.Services.Interfaces
 
         void ChangeBirthDayLimitation(Setting setting);
 
-        Task<DateTime> GetBirthDayLimitation();
+        DateTime GetBirthDayLimitation();
 
         void SetBirthDayLimitation(DateTime date);
 
         List<City> GetCityList();
+
+        
 
         #endregion
     }

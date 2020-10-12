@@ -28,5 +28,11 @@ namespace CelebrationRegister.Controllers
             return View(_notificationServices.GetAllNotification(8));
         }
 
+        public IActionResult News(int id)
+        {
+
+            return View(_notificationServices.GetNotificationById(id));
+        }
+
     }
 }
