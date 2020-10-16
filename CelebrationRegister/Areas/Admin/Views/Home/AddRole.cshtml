@@ -1,0 +1,37 @@
+﻿@using CelebrationRegister.Core.Services.Interfaces
+@inject IPermissionServices _permissionServices
+<h1 class="page-header">
+    مدیریت دسترسی های سامانه
+</h1>
+
+<div class="col-lg-4">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            افزودن دسترسی
+        </div>
+        @if (ViewData["Success"] != null)
+        {
+            <div class="alert alert-success">
+                دسترسی با موفقیت اضافه شد.
+            </div>
+        }
+        <div class="panel-body">
+            <form asp-area="Admin" asp-controller="Home" asp-action="AddRole" method="post">
+                <div class="form-group">
+                    <label>کد پرسنلی</label>
+                    <input name="employeeId" class="form-control" placeholder="کد پرسنلی کارمند را وارد کنید">
+                </div>
+                <div id="information"></div>
+                <div class="form-group">
+                    <label>دسترسی های سامانه</label>
+                    <select name="roleId" class="form-control" asp-items="ViewBag.EmployeeId"></select>
+                </div>
+                <input type="submit" value=" ثبت " class="btn btn-success"/>
+            </form>
+
+        </div>
+        <div class="panel-footer">
+            مدیریت دسترسی سامانه
+        </div>
+    </div>
+</div>

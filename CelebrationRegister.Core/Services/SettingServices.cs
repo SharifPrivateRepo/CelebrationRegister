@@ -7,11 +7,12 @@ using System.Web.Mvc;
 using CelebrationRegister.Core.Services.Interfaces;
 using CelebrationRegister.Data.Context;
 using CelebrationRegister.Data.Entities;
+using CelebrationRegister.Data.Entities.AdditionalOptions;
 using CelebrationRegister.Data.Entities.DynamicSettings;
 
 namespace CelebrationRegister.Core.Services
 {
-   public class SettingServices:ISettingServices
+    public class SettingServices : ISettingServices
     {
         #region Injection
 
@@ -51,6 +52,46 @@ namespace CelebrationRegister.Core.Services
         {
             var items = db.City.ToList();
             return items;
+        }
+
+        public List<AdditionalOptions> GetAllAdditionalOptions()
+        {
+            return db.AdditionalOptions.ToList();
+        }
+
+        public void AddOption(string optionTitle)
+        {
+            db.AdditionalOptions.Add(new AdditionalOptions()
+            {
+                OptionTitle = optionTitle
+            });
+
+            db.SaveChanges();
+        }
+
+        public void DeleteOption(int optionId)
+        {
+            var option = db.AdditionalOptions.SingleOrDefault(a => a.OptionId == optionId);
+            if (option != null && !option.IsDelete)
+            {
+                option.IsDelete = true;
+
+                db.AdditionalOptions.Update(option);
+                db.SaveChanges();
+            }
+        }
+
+        public Setting GetAverageNotification()
+        {
+            return db.Settings.Find(2);
+        }
+
+        public void SetAverageNotification(string text)
+        {
+           var notification = db.Settings.Find(2);
+           notification.Notification = text;
+           db.Settings.Update(notification);
+           db.SaveChanges();
         }
 
         #endregion

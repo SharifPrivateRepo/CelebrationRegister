@@ -11,12 +11,14 @@ namespace CelebrationRegister.Core.Tools
 {
     public static class ImageTools
     {
-        public static string SaveReportCardImage(IFormFile image, string employeeName, string childName)
+       
+        public static string SaveReportCardImage(IFormFile image, string employeeName, string childName , string cityName)
         {
+
             if (image != null)
             {
                 //Check Exist Folder
-                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Information/ReportCard/", employeeName);
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Information/ReportCard/",cityName, employeeName);
                 bool exists = Directory.Exists(path);
                 if (!exists)
                     Directory.CreateDirectory(path);
@@ -36,12 +38,12 @@ namespace CelebrationRegister.Core.Tools
             return null;
         }
 
-        public static string SavePersonalImage(IFormFile image, string employeeName, string childName)
+        public static string SavePersonalImage(IFormFile image, string employeeName, string childName,string cityName)
         {
             if (image != null)
             {
                 //Check Exist Folder
-                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Information/PersonalImage/", employeeName);
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Information/PersonalImage/",cityName, employeeName);
                 bool exists = Directory.Exists(path);
                 if (!exists)
                     Directory.CreateDirectory(path);
@@ -61,12 +63,12 @@ namespace CelebrationRegister.Core.Tools
             return null;
         }
 
-        public static string SaveOptionalDetailImage(IFormFile image, string employeeName, string childName,string detailTitle)
+        public static string SaveOptionalDetailImage(IFormFile image, string employeeName,string cityName, string childName,string detailTitle)
         {
             if (image != null)
             {
                 //Check Exist Folder
-                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Information/ReportCard/", employeeName);
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Information/ReportCard/",cityName, employeeName);
                 bool exists = Directory.Exists(path);
                 if (!exists)
                     Directory.CreateDirectory(path);

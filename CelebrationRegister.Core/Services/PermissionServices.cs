@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using CelebrationRegister.Core.Services.Interfaces;
 using CelebrationRegister.Data.Context;
 using CelebrationRegister.Data.Entities.Role;
 using Microsoft.EntityFrameworkCore;
+using SelectListItem = System.Web.Mvc.SelectListItem;
 
 namespace CelebrationRegister.Core.Services
 {
@@ -24,58 +27,55 @@ namespace CelebrationRegister.Core.Services
 
         #endregion
 
-        public async Task<List<Role>> GetAllRolesAsync()
+        public bool CheckPermission(int roleId, string personnelCode)
         {
-            return await db.Roles.ToListAsync();
-        }
+            int employeeId = db.Employees.SingleOrDefault(e => e.ProsonnelCode == personnelCode).EmployeeId;
 
-        public async Task<Role> GetRoleByRoleId(int roleId)
-        {
-            return await db.Roles
-                 .FirstOrDefaultAsync(m => m.RoleId == roleId);
-        }
+            List<EmployeeRole> employeeRole = db.EmployeeRoles.Where(e => e.EmployeeId == employeeId).ToList();
 
-        public async Task DeleteRoles(Role role)
-        {
-            db.Roles.Remove(role);
-            await db.SaveChangesAsync();
-        }
-
-        public async Task UpdateRoles(Role role)
-        {
-            db.Update(role);
-            await db.SaveChangesAsync();
-        }
-
-        public async Task<int> AddRoles(Role role)
-        {
-            await db.AddAsync(role);
-            await db.SaveChangesAsync();
-            return role.RoleId;
-        }
-
-        public List<Permission> GetAllPermission()
-        {
-            return db.Permissions.ToList();
-        }
-
-        public async Task AddPermissionToRole(int roleId, List<int> selectedPermissions)
-        {
-            foreach (var item in selectedPermissions)
+            if (!employeeRole.Any())
             {
-               await db.PermissionRoles.AddAsync(new PermissionRole()
-                {
-                    RoleId = roleId,
-                    PermissionId = item
-                });
+                return false;
             }
 
-            await db.SaveChangesAsync();
+            if (employeeRole.Any(er => er.RoleId == 1))
+            {
+                return true;
+            }
+
+            return false;
         }
 
-        public async Task<List<PermissionRole>> PermissionsRoleList(int roleId)
+        public List<Role> GetAllRole()
         {
-            return await db.PermissionRoles.ToListAsync();
+            return db.Roles.ToList();
+        }
+
+        public bool AddRoleForEmployee(int roleId, string personnelCode)
+        {
+            int? employeeId = db.Employees.Where(e => e.ProsonnelCode == personnelCode).Select(e => e.EmployeeId)
+                .FirstOrDefault();
+
+            if (employeeId == null)
+            {
+                return false;
+            }
+
+            try
+            {
+                db.EmployeeRoles.Add(new EmployeeRole()
+                {
+                    EmployeeId = employeeId.Value,
+                    RoleId = roleId
+                });
+                db.SaveChanges();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

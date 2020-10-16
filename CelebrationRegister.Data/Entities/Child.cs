@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using CelebrationRegister.Data.Entities.AdditionalOptions;
 
 namespace CelebrationRegister.Data.Entities
 {
@@ -50,6 +51,8 @@ namespace CelebrationRegister.Data.Entities
         public List<ReportCard> ReportCards { get; set; }
 
         public List<OptionalDetails> OptionalDetails { get; set; }
+
+        public List<Child_AdditionalOption> AdditionalOptions { get; set; }
 
         #endregion
     }

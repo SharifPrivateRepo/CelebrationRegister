@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using CelebrationRegister.Data.Entities;
+using CelebrationRegister.Data.Entities.AdditionalOptions;
 using Microsoft.AspNetCore.Http;
 
 namespace CelebrationRegister.Core.ViewModels.AccountViewModel
@@ -44,6 +45,8 @@ namespace CelebrationRegister.Core.ViewModels.AccountViewModel
         public OptionalDetails OptionalSampadDetail { get; set; }
 
         public OptionalDetails OptionalUniversityDetails { get; set; }
+
+        public List<AdditionalOptions> AdditionalOptions { get; set; }
 
         public IFormFile OptionalDetailsSampadImages { get; set; }
 

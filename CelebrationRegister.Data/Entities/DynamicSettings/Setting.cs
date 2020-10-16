@@ -13,5 +13,7 @@ namespace CelebrationRegister.Data.Entities.DynamicSettings
         public string SettingTitle { get; set; }
 
         public DateTime? BirthDayLimitation { get; set; }
+
+        public string Notification { get; set; }
     }
 }

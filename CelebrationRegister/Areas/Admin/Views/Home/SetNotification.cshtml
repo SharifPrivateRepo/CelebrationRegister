@@ -1,0 +1,34 @@
+﻿@model CelebrationRegister.Data.Entities.DynamicSettings.Setting
+
+<form asp-area="Admin" asp-controller="Home" asp-action="SetNotification">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+           اطلاعیه معدل مقطع ابتدایی
+        </div>
+        <!-- /.panel-heading -->
+        <div class="panel-body">
+            <div class="form-group">
+                <label>متن اطلاعیه </label>
+                <textarea asp-for="Notification" type="text" id="text" name="text" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <input type="submit" value=" ثبت " class="btn btn-success">
+            </div>
+
+        </div>
+        <!-- /.panel-body -->
+    </div>
+</form>
+
+@section Scripts
+{
+    <script src="/AdminContent/js/ckeditor.js"></script>
+    <script>
+
+        CKEDITOR.replace('text', {
+            customConfig: '/AdminContent/js/Config.js'
+        });
+
+    </script>
+
+}

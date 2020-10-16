@@ -1,5 +1,6 @@
 ﻿@using CelebrationRegister.Core.Services.Interfaces
 @using CelebrationRegister.Data.Entities
+@using CelebrationRegister.Data.Entities.AdditionalOptions
 @using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList
 @model CelebrationRegister.Core.ViewModels.AccountViewModel.RegisterViewModel
 @inject ISettingServices _settingServices
@@ -9,16 +10,22 @@
     int employeeId = (int)ViewData["EmployeeId"];
 
 
+    var limitDate = _settingServices.GetBirthDayLimitation();
+    int year = limitDate.Year;
+    int mouth = limitDate.Month;
+    int day = limitDate.Day;
 }
 
 @section StyleSheet
 {
-    @*<link rel="stylesheet" href="/MdBootstrapPersianDateTimePicker/ bootstrap.min.css" />*@
-    @* <link rel="stylesheet" href="/css/bootstrap-theme.min.css" />*@
     <link rel="stylesheet" href="/css/Persian-calender.css" />
-    <script src="/js/jquery-3.5.1.slim.min.js"></script>
+    @* <script src="/js/bootstrap/jquery-3.2.1.slim.min.js"></script>*@
+    <script src="/js/bootstrap/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="/js/Persian-calender/persian-date.min.js"></script>
     <script src="/js/Persian-calender/persian-datepicker.min.js"></script>
+    <script src="/js/bootstrap/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="/js/bootstrap/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
 }
 <main>
     <div class="container user-panel" id="user-panel" style="display: flex;">
@@ -49,7 +56,7 @@
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label">تاریخ تولد</label>
                             <div class="col-sm-8">
-                                <input asp-for="Birthday" type="text" class="form-control" onchange="SetBirthday()">
+                                <input asp-for="Birthday" autocomplete="off" type="text" class="form-control" onchange="SetBirthday()">
                                 <label class="help-block text-info" style="font-size: small">
                                     <i class="zmdi zmdi-help"></i>
                                     برای استفاده از تقویم شمسی روی متن تاریخ کلیک کنید.
@@ -83,43 +90,77 @@
                                 <div style="display: flex">
                                     <label class="col-sm-2 col-form-label">معدل</label>
                                     <div class="col-sm-6">
-                                        <input asp-for="AverageGrade" type="number" class="form-control">
+                                        <input asp-for="AverageGrade" type="number" step="0.01" min="0" max="20" title="مقدار معدل باید با تقریب 0.01 اعشار باشد!" oninvalid="this.setCustomValidity('مقدار معدل باید با تقریب 0.01 اعشار باشد!')" class="form-control">
                                     </div>
+                                    <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#notification">
+                                        <i class="zmdi zmdi-notifications"></i>
+                                        توجه
+                                    </button>
                                 </div>
                             </div>
 
                         </div>
 
                         <h5 class="text-success">
-                            <input type="checkbox" onchange="changedOptional()" id="optionalDetails" class="checkbox-inline" />
-                            موارد تشویقی
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addtional-option">موارد تشویقی</button>
                         </h5>
-                        <div id="optionalFields" class="row form-group alert alert-info" style="display: flex;opacity: 0 ; transition: height 0.3s; height: 25px">
-                            <div class="col-sm-6 alert alert-warning">
-                                <h5 class="text-success">
-                                    <input type="checkbox" onchange="changedSampad()" id="sampadDetail" class="checkbox-inline" />
-                                    پذیرفته / محصل در مدارس تیزهوشان
-                                </h5>
 
-                                <label> انتخاب تصویر</label>
-                                <div class="custom-file">
-                                    <img id="imgSampad" style="width: 400px; height: 300px" src="/Information/ReportCard/NoPhoto.png" class="img-circle img-rounded img-fluid img-responsive img-thumbnail" />
-                                    <input id="sampadOptionPanel" style="display: none" asp-for="OptionalDetailsSampadImages" type="file" class="form-control-file">
+                        <div class="modal fade" id="addtional-option" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">موارد تشویقی دانش پژوهان</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body row" style="padding: 5%">
+                                        <div class="col-sm-12 alert alert-success d-flex justify-content-between">
+                                            <h6 class="text-success">
+                                                <input type="checkbox" onchange="changedSampad()" id="sampadDetail" class="checkbox-inline" />
+                                                پذیرفته / محصل در مدارس تیزهوشان
+                                            </h6>
+                                            <div class="d-flex flex-column align-items-center" style="width: 30%">
+                                                <label> انتخاب تصویر</label>
+                                                <input id="sampadOptionPanel" style="display: none" asp-for="OptionalDetailsSampadImages" type="file" class="form-control-file">
+                                            </div>
+                                            <img id="imgSampad" style="width: 200px; height: 150px" src="/Information/ReportCard/NoPhoto.png" class="img-circle img-rounded img-fluid img-responsive img-thumbnail" />
+
+                                        </div>
+
+                                        <div class="col-sm-12 alert alert-success d-flex justify-content-between">
+                                            <h6 class="text-success">
+                                                <input type="checkbox" onchange="changedUniversity()" id="universityDetail" class="checkbox-inline" />
+                                                ورود به دانشگاه
+                                            </h6>
+                                            <div class="d-flex flex-column align-items-center" style="width: 30%">
+                                                <label> انتخاب تصویر </label>
+                                                <input id="universityOptionPanel" style="display: none" asp-for="OptionalDetailsUniversityImages" type="file" class="form-control-file">
+                                            </div>
+                                            <img id="imgUniversity" style="width: 200px; height: 150px" src="/Information/ReportCard/NoPhoto.png" class="img-circle img-rounded img-fluid img-responsive img-thumbnail" />
+
+                                        </div>
+
+                                        <div class="alert alert-success d-flex justify-content-between flex-wrap">
+
+                                            @{
+                                                List<AdditionalOptions> options = _settingServices.GetAllAdditionalOptions();
+                                            }
+                                            @foreach (var option in options)
+                                            {
+                                                <div class="align-self-center">
+                                                    <input type="checkbox" name="options" class="options" value="@option.OptionId" />
+                                                    <label>@option.OptionTitle</label>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="clearOptions()">بازگشت</button>
+                                        <button type="button" class="btn btn-success" data-dismiss="modal">ثبت</button>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div class="col-sm-6 alert alert-warning">
-                                <h5 class="text-success">
-                                    <input type="checkbox" onchange="changedUniversity()" id="universityDetail" class="checkbox-inline" />
-                                    ورود به دانشگاه
-                                </h5>
-                                <label> انتخاب تصویر </label>
-                                <div class="custom-file">
-                                    <img id="imgUniversity" style="width: 400px; height: 300px" src="/Information/ReportCard/NoPhoto.png" class="img-circle img-rounded img-fluid img-responsive img-thumbnail" />
-                                    <input id="universityOptionPanel" style="display: none" asp-for="OptionalDetailsUniversityImages" type="file" class="form-control-file">
-                                </div>
-                            </div>
-
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-10">
@@ -132,15 +173,29 @@
         </div>
     </div>
 </main>
-@{
-    var limitDate = _settingServices.GetBirthDayLimitation();
-    int year = limitDate.Year;
-    int mouth = limitDate.Month;
-    int day = limitDate.Day;
-}
+
+<div class="modal fade" id="notification" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="exampleModalLongTitle">توجه</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body row" style="padding: 5%">
+                @Html.Raw(_settingServices.GetAverageNotification().Notification)
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">مطالعه کردم</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Large modal -->
 @section Scripts
 {
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             $("#Birthday").persianDatepicker({
                 altField: '#Birthday',
@@ -154,7 +209,8 @@
                 maxDate: 'today'
             });
         });
-
+    </script>
+    <script type="text/javascript">
         var _validFileExtensions = [".jpg", ".jpeg", ".bmp", ".gif", ".png"];
         function Validate(oForm) {
             var arrInputs = oForm.getElementsByTagName("input");
@@ -193,17 +249,17 @@
                         $('#imgReportCard').attr('src', e.target.result);
                     }
 
-                } else if (input.id == "PersonalImage"){
+                } else if (input.id == "PersonalImage") {
                     reader.onload = function (e) {
                         $('#imgPersonal').attr('src', e.target.result);
                     }
 
-                } else if (input.id == "sampadOptionPanel"){
+                } else if (input.id == "sampadOptionPanel") {
                     reader.onload = function (e) {
                         $('#imgSampad').attr('src', e.target.result);
                     }
 
-                }else if (input.id == "universityOptionPanel"){
+                } else if (input.id == "universityOptionPanel") {
                     reader.onload = function (e) {
                         $('#imgUniversity').attr('src', e.target.result);
                     }
@@ -234,7 +290,6 @@
 
     <script>
         function SetBirthday() {
-
             var birthday = document.getElementById("Birthday");
             var date = new persianDate(birthday.innerText).toLocale('fa').format();
             birthday.type = date;
@@ -245,22 +300,6 @@
     </script>
 
     <script type="text/javascript">
-        var optionalDetails = document.getElementById("optionalDetails");
-        var optionalFields = document.getElementById("optionalFields");
-
-
-        function changedOptional() {
-            if (optionalDetails.checked) {
-                // optionalFields.style.display = "flex";
-                optionalFields.style.height = "470px";
-                optionalFields.style.opacity = 1;
-            } else {
-                //optionalFields.style.display = "none";
-                optionalFields.style.height = "25px";
-                optionalFields.style.opacity = 0;
-            }
-        }
-
         var sampadDetail = document.getElementById("sampadDetail");
         var sampadOptionPanel = document.getElementById("sampadOptionPanel");
 
@@ -274,11 +313,31 @@
 
         var universityDetail = document.getElementById("universityDetail");
         var universityOptionPanel = document.getElementById("universityOptionPanel");
+
+
         function changedUniversity() {
             if (universityDetail.checked) {
                 universityOptionPanel.style.display = "block";
             } else {
                 universityOptionPanel.style.display = "none";
+            }
+        }
+
+        function clearOptions() {
+
+            if (sampadOptionPanel.value != null) {
+                sampadOptionPanel.value = null;
+            }
+
+            if (universityOptionPanel.value != null) {
+                universityOptionPanel.value = null
+            }
+
+            var options = document.getElementsByClassName("options");
+            for (var option in options) {
+                if (options[option].checked == true) {
+                    options[option].checked = false;
+                }
             }
         }
     </script>

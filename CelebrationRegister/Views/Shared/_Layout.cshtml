@@ -1,4 +1,5 @@
-﻿<html lang="fa">
+﻿@inject IUserServices _userServices
+<html lang="fa">
 
 <head>
     <meta charset="UTF-8">
@@ -27,17 +28,14 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/panel-style.css">
 
-    <!-- Optional JavaScript -->
-    <script src="/js/index-edited.js"></script>
-
-    <link rel="stylesheet" href="/MdBootstrapPersianDateTimePicker/jquery.Bootstrap-PersianDateTimePicker.min.css" />
+   @* <link rel="stylesheet" href="/MdBootstrapPersianDateTimePicker/jquery.Bootstrap-PersianDateTimePicker.min.css" />*@
 
 </head>
 
 <body>
     <header class="container-fluid bg-dark header">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="#">ثبت نام جشن تحصیلی</a>
+            <a class="navbar-brand" href="/">ثبت نام جشن تحصیلی</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -54,10 +52,10 @@
                             <a class="nav-link" asp-area="UserPanel" asp-controller="Home" asp-action="Index">ارسال مدارک</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-success" href="/UserPanel" > @User.Identity.Name عزیز خوش آمدید!</a>
+                            <a class="nav-link text-success" href="/UserPanel" > @_userServices.GetEmployeeNameByPersonnelCode(User.Identity.Name) عزیز خوش آمدید!</a>
                         </li>
                         <li class="nav-item text-danger">
-                            <a class="nav-link text-danger" href="Logout"> خروج </a>
+                            <a class="nav-link text-danger" href="/Logout"> خروج </a>
                         </li>
                     }
                     else
@@ -67,10 +65,10 @@
                         </li>
                     }
                 </ul>
-                <form class="form-inline my-2 my-lg-0">
+                @*<form class="form-inline my-2 my-lg-0">
                     <input class="form-control mr-sm-2" type="search" placeholder="جستجو" aria-label="Search">
                     <button class="btn btn-success my-2 my-sm-0" type="submit">جستجو</button>
-                </form>
+                </form>*@
             </div>
         </nav>
 
@@ -81,13 +79,15 @@
 
     <footer>
         <div class="footer">
-            <div class="container">
+            <div class="pt-2 d-flex justify-content-center">
                 نقل و نشر مطالب با ذکر نام سایت شرکت توزیع نیروی برق استان سمنان بلامانع است.
+            </div>
+            <div class="d-flex justify-content-center mt-4 pb-1">
+                طراحی و توسعه توسط گروه برنامه نویسی رسا
             </div>
 
         </div>
     </footer>
-    <script src="/js/index-edited.js"></script>
     @RenderSection("Scripts", false)
 </body>
 

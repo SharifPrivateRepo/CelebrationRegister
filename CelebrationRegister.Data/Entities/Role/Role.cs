@@ -18,7 +18,6 @@ namespace CelebrationRegister.Data.Entities.Role
         #region Realtion
 
         public List<EmployeeRole> EmployeeRoles { get; set; }
-        public List<PermissionRole> PermissionRoles { get; set; }
 
         #endregion
     }

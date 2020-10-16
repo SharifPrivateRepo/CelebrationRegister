@@ -116,20 +116,12 @@ namespace CelebrationRegister.Web.Areas.UserPanel.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel child)
+        public async Task<IActionResult> Register(RegisterViewModel child, List<int> options)
         {
-            DateTime birthday = DateConvertor.ToMiladi(child.Birthday);
 
-            var maxDate = _settingServices.GetBirthDayLimitation();
-
-
-            if (!ModelState.IsValid || (birthday < maxDate))
+            if (!ModelState.IsValid)
             {
                 var items = await _userServices.GetAllGradesAsync();
-                if (birthday < maxDate)
-                {
-                    ModelState.AddModelError("", "تاریخ تولد صحیح نمی باشد");
-                }
 
                 ViewData["GradeList"] = items;
                 ViewData["Error"] = true;
@@ -138,8 +130,25 @@ namespace CelebrationRegister.Web.Areas.UserPanel.Controllers
                 return View(child);
             }
 
+            var birthday = DateConvertor.ToMiladi(child.Birthday);
+            var maxDate = _settingServices.GetBirthDayLimitation();
+
+            if (birthday < maxDate)
+            {
+                var items = await _userServices.GetAllGradesAsync();
+
+                ViewData["GradeList"] = items;
+                ViewData["Error"] = true;
+                ViewData["EmployeeId"] = child.EmployeeId;
+
+                ModelState.AddModelError("", "تاریخ تولد صحیح نمی باشد");
+                return View(child);
+            }
+
 
             child.ChildId = await _userServices.AddChildAsync(child);
+
+            await _userServices.AddOptionForChild(child.ChildId, options);
 
             if (child.OptionalDetailsSampadImages != null)
             {

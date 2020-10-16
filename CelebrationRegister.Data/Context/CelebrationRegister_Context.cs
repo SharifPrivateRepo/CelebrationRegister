@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CelebrationRegister.Data.Entities;
+using CelebrationRegister.Data.Entities.AdditionalOptions;
 using CelebrationRegister.Data.Entities.DynamicSettings;
 using CelebrationRegister.Data.Entities.Role;
 using Microsoft.EntityFrameworkCore;
 
 namespace CelebrationRegister.Data.Context
 {
-    public class CelebrationRegister_Context:DbContext
+    public class CelebrationRegister_Context : DbContext
     {
-        public CelebrationRegister_Context(DbContextOptions<CelebrationRegister_Context> options):base(options)
+        public CelebrationRegister_Context(DbContextOptions<CelebrationRegister_Context> options) : base(options)
         {
-            
+
         }
 
         public DbSet<Notification> Notfications { get; set; }
@@ -29,8 +30,6 @@ namespace CelebrationRegister.Data.Context
         #region Role
 
         public DbSet<Role> Roles { get; set; }
-        public DbSet<PermissionRole> PermissionRoles { get; set; }
-        public DbSet<Permission> Permissions { get; set; }
         public DbSet<EmployeeRole> EmployeeRoles { get; set; }
 
 
@@ -39,6 +38,9 @@ namespace CelebrationRegister.Data.Context
         #region Settings
 
         public DbSet<Setting> Settings { get; set; }
+        public DbSet<AdditionalOptions> AdditionalOptions { get; set; }
+
+        public DbSet<Child_AdditionalOption> ChildAdditionalOptions { get; set; }
 
         #endregion
 
@@ -49,7 +51,11 @@ namespace CelebrationRegister.Data.Context
 
             modelBuilder.Entity<Grade>()
                 .HasQueryFilter(g => !g.IsDelete);
-           
+
+            modelBuilder.Entity<AdditionalOptions>()
+                .HasQueryFilter(ad => !ad.IsDelete);
+
+
             base.OnModelCreating(modelBuilder);
         }
     }

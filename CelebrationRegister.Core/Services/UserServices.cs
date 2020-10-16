@@ -9,8 +9,11 @@ using CelebrationRegister.Core.Convertors;
 using CelebrationRegister.Core.Services.Interfaces;
 using CelebrationRegister.Core.Tools;
 using CelebrationRegister.Core.ViewModels.AccountViewModel;
+using CelebrationRegister.Core.ViewModels.AdminViewModel;
 using CelebrationRegister.Data.Context;
 using CelebrationRegister.Data.Entities;
+using CelebrationRegister.Data.Entities.AdditionalOptions;
+using ClosedXML.Excel;
 using ExcelDataReader;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -76,13 +79,14 @@ namespace CelebrationRegister.Core.Services
 
         public async Task<Employee> GetEmployeeByIdAsync(int id)
         {
-            return await db.Employees
+            return await db.Employees.Include(e => e.City)
                 .Where(e => e.EmployeeId == id).SingleOrDefaultAsync();
         }
 
         public async Task<Employee> GetEmployeeByIdAsync(string personalCode)
         {
             return await db.Employees
+                .Include(e=>e.City)
                 .Include(e => e.Children)
                 .ThenInclude(ec => ec.ReportCards)
                 .Where(e => e.ProsonnelCode == personalCode).SingleOrDefaultAsync();
@@ -215,6 +219,11 @@ namespace CelebrationRegister.Core.Services
 
         }
 
+        public string GetEmployeeNameByPersonnelCode(string personnelCode)
+        {
+            return db.Employees.SingleOrDefault(e => e.ProsonnelCode == personnelCode)?.FullName;
+        }
+
         public async Task<List<Grade>> GetAllGradesAsync()
         {
             return await db.Grades
@@ -251,7 +260,7 @@ namespace CelebrationRegister.Core.Services
 
         public async Task UpdateGradeAsync(int gradeId, string gradeTitle)
         {
-            var grade =GetGradeById(gradeId);
+            var grade = GetGradeById(gradeId);
             grade.GradeTitle = gradeTitle;
             db.Grades.Update(grade);
             await db.SaveChangesAsync();
@@ -275,14 +284,33 @@ namespace CelebrationRegister.Core.Services
             return db.Grades.Find(gradeId);
         }
 
-        public async Task<List<Child>> GetAllChildrenAsync(int employeeId = 0, int pageId = 1, int take = 10)
+        public async Task<List<Child>> GetAllChildrenAsync(int employeeId = 0, int pageId = 1, int take = 10, string filter = null, string parentPersonnelCode = null, int cityId = 0)
         {
             IQueryable<Child> result = db.Children
-                .Include(c => c.Employee).Include(c => c.Grade);
+                .Include(c => c.Employee)
+                .ThenInclude(p => p.City)
+                .Include(c => c.Grade)
+                .Include(c => c.ReportCards)
+                .ThenInclude(r => r.Status);
 
             if (employeeId != 0)
             {
                 result = result.Where(c => c.EmployeeId == employeeId);
+            }
+
+            if (!string.IsNullOrEmpty(filter))
+            {
+                result = result.Where(c => EF.Functions.Like(c.FullName, "%" + filter + "%"));
+            }
+
+            if (!string.IsNullOrEmpty(parentPersonnelCode))
+            {
+                result = result.Where(c => EF.Functions.Like(c.Employee.ProsonnelCode, "%" + parentPersonnelCode + "%"));
+            }
+
+            if (cityId != 0)
+            {
+                result = result.Where(c => c.Employee.City.CityId == cityId);
             }
 
             int skip = (pageId - 1) * take;
@@ -306,9 +334,9 @@ namespace CelebrationRegister.Core.Services
                 .Where(c => c.EmployeeId == employeeId).ToListAsync();
         }
 
-        public async Task<List<Child>> GetChildByPersonalCodeAsync(string pesonalCode)
+        public async Task<List<Child>> GetChildByPersonalCodeAsync(string personalCode)
         {
-            int employeeId = await db.Employees.Where(e => e.ProsonnelCode == pesonalCode).Select(e => e.EmployeeId)
+            int employeeId = await db.Employees.Where(e => e.ProsonnelCode == personalCode).Select(e => e.EmployeeId)
                 .SingleOrDefaultAsync();
 
             return await GetChildByEmployeeIdAsync(employeeId);
@@ -317,10 +345,11 @@ namespace CelebrationRegister.Core.Services
         public async Task<int> AddChildAsync(RegisterViewModel child)
         {
             //TODO : Save images
-            var employeeName = await Task.FromResult(db.Employees.FindAsync(child.EmployeeId).Result.FullName);
-            string personalImageName = ImageTools.SavePersonalImage(child.PersonalImage, employeeName, child.FullName);
+            var employeeName = db.Employees.Include(e => e.City)
+                .SingleOrDefault(e => e.EmployeeId == child.EmployeeId);
+            string personalImageName = ImageTools.SavePersonalImage(child.PersonalImage, employeeName.FullName, child.FullName, employeeName.City.CityName);
             string reportCardImageName =
-                ImageTools.SaveReportCardImage(child.ReportCardImage, employeeName, child.FullName);
+                ImageTools.SaveReportCardImage(child.ReportCardImage, employeeName.FullName, child.FullName, employeeName.City.CityName);
 
             var addChild = new Child()
             {
@@ -349,6 +378,20 @@ namespace CelebrationRegister.Core.Services
             return addChild.ChildId;
         }
 
+        public async Task AddOptionForChild(int childId, List<int> options)
+        {
+            options.ForEach(option =>
+             {
+                 db.ChildAdditionalOptions.AddAsync(new Child_AdditionalOption()
+                 {
+                     ChildId = childId,
+                     OptionId = option
+                 });
+             });
+
+            await db.SaveChangesAsync();
+        }
+
         public async Task<int> AddChildAsync(Child child)
         {
             await db.Children.AddAsync(child);
@@ -356,14 +399,28 @@ namespace CelebrationRegister.Core.Services
             return child.ChildId;
         }
 
-        public async Task<Child> GetChildInformationAsync(int childId)
+        public async Task<EditChildViewModel> GetChildInformationAsync(int childId)
         {
-            return await db.Children
-                .Include(c => c.Employee)
-                .Include(c => c.Grade)
-                .Include(c => c.ReportCards)
-                .ThenInclude(cr => cr.OptionalDetails)
+            var result = await db.Children
+                .Select(c => new EditChildViewModel()
+                {
+                    FullName = c.FullName,
+                    ChildId = c.ChildId,
+                    EmployeeId = c.EmployeeId,
+                    GradeId = c.GradeId,
+                    Birthday = c.Birthday,
+                    Image = c.Image,
+                    NationalCode = c.NationalCode
+                })
                 .FirstOrDefaultAsync(m => m.ChildId == childId);
+
+            result.AdditionalOptionsId = db.ChildAdditionalOptions.Where(a => a.ChildId == childId)
+                .Select(a => a.OptionId).ToList();
+
+            result.OptionalDetailId = db.OptionalDetails.Where(od => od.ChildId == childId)
+                .Select(od => od.ODetailsId).ToList();
+
+            return result;
         }
 
         public async Task EditChildAsync(Child child)
@@ -387,10 +444,11 @@ namespace CelebrationRegister.Core.Services
 
             if (child != null)
             {
-                var parent = await GetEmployeeByIdAsync(child.EmployeeId);
+                var parent = await db.Employees.Include(e => e.City)
+                    .SingleOrDefaultAsync(e => e.EmployeeId == child.EmployeeId);
                 details.ChildId = child.ChildId;
                 //TODO : save image
-                details.ImageName = ImageTools.SaveOptionalDetailImage(image, parent.FullName, child.FullName,
+                details.ImageName = ImageTools.SaveOptionalDetailImage(image, parent.FullName, parent.City.CityName, child.FullName,
                     details.DetailTitle.Title);
             }
 
@@ -401,6 +459,54 @@ namespace CelebrationRegister.Core.Services
             }
 
             await db.OptionalDetails.AddAsync(details);
+        }
+
+        public async Task UpdateStatusId(int reportCardId, int statusId)
+        {
+            var reportCard = await db.ReportCards.Include(r => r.Status)
+                .SingleOrDefaultAsync(r => r.ReportCardId == reportCardId);
+
+            reportCard.StatusId = statusId;
+
+            db.Update(reportCard);
+            await db.SaveChangesAsync();
+        }
+
+        public List<Status> GetAllStatus()
+        {
+            return db.Statuses.ToList();
+        }
+
+        public ReportCard GetReportCardByChildId(int childId)
+        {
+            return db.ReportCards.Include(r => r.Status)
+                .OrderByDescending(r => r.ReportCardId)
+                .FirstOrDefault(r => r.ChildId == childId);
+        }
+
+        public List<ExportExcelFileViewModel> ExportChildData()
+        {
+            var data = db.Children.Include(c => c.Employee).ThenInclude(e => e.City)
+                .Include(c => c.ReportCards)
+                .Include(c => c.Grade)
+                .Select(c => new ExportExcelFileViewModel()
+                {
+                    FullName = c.FullName,
+                    NationalCode = c.NationalCode,
+                    Average = c.ReportCards[0].AverageGrade,
+                    Grade = c.Grade.GradeTitle,
+                    Birthday = c.Birthday.ToShamsi(),
+                    ChildId = c.ChildId,
+                    EmployeeName = c.Employee.FullName,
+                    City = c.Employee.City.CityName
+                }).ToList();
+
+            return data;
+        }
+
+        public List<string> GetAllCityName()
+        {
+            return db.City.Select(c => c.CityName).ToList();
         }
     }
 }

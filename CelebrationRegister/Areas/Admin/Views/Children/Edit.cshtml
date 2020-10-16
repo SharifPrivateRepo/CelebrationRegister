@@ -1,8 +1,13 @@
-﻿@model CelebrationRegister.Data.Entities.Child
+﻿@using CelebrationRegister.Data.Entities
+@model CelebrationRegister.Core.ViewModels.AdminViewModel.EditChildViewModel
 
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Areas/Admin/Views/Shared/_DefaultLayout.cshtml";
+
+    ReportCard reportCard = ViewData["ReportCard"] as ReportCard;
+    Employee employee = ViewData["Employee"] as Employee;
+
 }
 
 <div class="row">
@@ -24,13 +29,17 @@
             </div>
             <div class="panel-body">
 
-                <h4>نام پدر / مادر : "@Model.Employee.FullName"</h4>
+                <h4>نام پدر / مادر : "@employee.FullName"</h4>
                 <hr />
                 <div class="row">
                     <div class="col-md-6">
+                        <input type="hidden" asp-for="EmployeeId"/>
+                        <input type="hidden" asp-for="Image"/>
+                        <input type="hidden" asp-for="ChildId"/>
+                        <input type="hidden" asp-for="Birthday"/>
+                        <input type="hidden" name="reportCardId" value="@reportCard.ReportCardId"/>
 
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <input type="hidden" asp-for="ChildId" />
                         <div class="form-group">
                             <label asp-for="EmployeeId" class="control-label">نام پدر / مادر</label>
                             <select disabled="" asp-for="EmployeeId" class="form-control" asp-items="ViewBag.EmployeeId"></select>
@@ -41,28 +50,39 @@
                             <input asp-for="FullName" class="form-control" />
                             <span asp-validation-for="FullName" class="text-danger"></span>
                         </div>
-
                         <div class="form-group">
                             <label asp-for="GradeId" class="control-label"></label>
                             <select asp-for="GradeId" class="form-control" asp-items="ViewBag.GradeId"></select>
                             <span asp-validation-for="GradeId" class="text-danger"></span>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">وضعیت بررسی</label>
+                            <select asp-for="StatusId" class="form-control" asp-items="ViewBag.StatusItem"></select>
+                            <span asp-validation-for="EmployeeId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">کد ملی</label>
+                            <input asp-for="NationalCode" class="form-control" />
+                            <span asp-validation-for="NationalCode" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">معدل</label>
+                            <input disabled="" value="@reportCard.AverageGrade" class="form-control" />
+                        </div>
 
 
-                    <div class="form-group form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" asp-for="IsDelete" /> @Html.DisplayNameFor(model => model.IsDelete)
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" value="Save" class="btn btn-primary" />
                     </div>
 
                 </div>
+                <div class="form-group">
+                    <input type="submit" value=" ذخیره تغییرات " class="btn btn-warning" />
+                    <a class="btn btn-primary" asp-action="Index"> بازگشت به فهرست </a>
+                </div>
+
 
                 <div>
-                    <a asp-action="Index">Back to List</a>
                 </div>
             </div>
         </div>
@@ -78,22 +98,19 @@
 
                 <div class="form-group">
                     <label asp-for="Image" class="control-label"></label>
-                    <img style="width: 100%; height: 300px" class="img-thumbnail" src="/Information/PersonalImage/@Model.Employee.FullName/@Model.Image" />
-                    <input type="file" name="imgPersonal" class="form-control" />
-                    <span asp-validation-for="Image" class="text-danger"></span>
+                    <img style="width: 100%; height: 300px" class="img-thumbnail" src="/Information/PersonalImage/@employee.City.CityName/@employee.FullName/@Model.Image" />
                 </div>
+                <hr/>
                 <div class="form-group">
-                    <label asp-for="ReportCardId" class="control-label"></label>
-                    @if (Model.ReportCards.Any())
+                    <label class="control-label">تصویر کارنامه</label>
+                    @if (reportCard != null)
                     {
-                        <img style="width: 100%; height: 300px" class="img-thumbnail" src="/Information/ReportCard/@Model.Employee.FullName/@Model.ReportCards.LastOrDefault().ReportCardImage" />
+                        <img style="width: 100%; height: 300px" class="img-thumbnail" src="/Information/ReportCard/@employee.City.CityName/@employee.FullName/@reportCard.ReportCardImage" />
                     }
                     else
                     {
                         <img style="width: 100%; height: 300px" class="img-thumbnail" src="/Information/ReportCard/NoPhoto.png" />
                     }
-                    <input type="file" name="imgReportcard" class="form-control" />
-                    <span asp-validation-for="ReportCardId" class="text-danger"></span>
                 </div>
 
             </div>
@@ -101,8 +118,6 @@
         </div>
     </div>
 </form>
-
-
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

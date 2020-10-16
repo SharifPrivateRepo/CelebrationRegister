@@ -19,6 +19,51 @@ namespace CelebrationRegister.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("CelebrationRegister.Data.Entities.AdditionalOptions.AdditionalOptions", b =>
+                {
+                    b.Property<int>("OptionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("OptionTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.HasKey("OptionId");
+
+                    b.ToTable("AdditionalOptions");
+                });
+
+            modelBuilder.Entity("CelebrationRegister.Data.Entities.AdditionalOptions.Child_AdditionalOption", b =>
+                {
+                    b.Property<int>("CH_AOId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AdditionalOptionsOptionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ChildId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OptionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CH_AOId");
+
+                    b.HasIndex("AdditionalOptionsOptionId");
+
+                    b.HasIndex("ChildId");
+
+                    b.ToTable("ChildAdditionalOptions");
+                });
+
             modelBuilder.Entity("CelebrationRegister.Data.Entities.Child", b =>
                 {
                     b.Property<int>("ChildId")
@@ -105,6 +150,9 @@ namespace CelebrationRegister.Data.Migrations
 
                     b.Property<DateTime?>("BirthDayLimitation")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Notification")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SettingTitle")
                         .HasColumnType("nvarchar(max)");
@@ -305,49 +353,6 @@ namespace CelebrationRegister.Data.Migrations
                     b.ToTable("EmployeeRoles");
                 });
 
-            modelBuilder.Entity("CelebrationRegister.Data.Entities.Role.Permission", b =>
-                {
-                    b.Property<int>("PermissionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("ParentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PermissionTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("PermissionId");
-
-                    b.HasIndex("ParentId");
-
-                    b.ToTable("Permissions");
-                });
-
-            modelBuilder.Entity("CelebrationRegister.Data.Entities.Role.PermissionRole", b =>
-                {
-                    b.Property<int>("PR_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("PermissionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PR_Id");
-
-                    b.HasIndex("PermissionId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("PermissionRoles");
-                });
-
             modelBuilder.Entity("CelebrationRegister.Data.Entities.Role.Role", b =>
                 {
                     b.Property<int>("RoleId")
@@ -379,6 +384,19 @@ namespace CelebrationRegister.Data.Migrations
                     b.HasKey("StatusId");
 
                     b.ToTable("Statuses");
+                });
+
+            modelBuilder.Entity("CelebrationRegister.Data.Entities.AdditionalOptions.Child_AdditionalOption", b =>
+                {
+                    b.HasOne("CelebrationRegister.Data.Entities.AdditionalOptions.AdditionalOptions", "AdditionalOptions")
+                        .WithMany("Children")
+                        .HasForeignKey("AdditionalOptionsOptionId");
+
+                    b.HasOne("CelebrationRegister.Data.Entities.Child", "Child")
+                        .WithMany("AdditionalOptions")
+                        .HasForeignKey("ChildId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("CelebrationRegister.Data.Entities.Child", b =>
@@ -451,28 +469,6 @@ namespace CelebrationRegister.Data.Migrations
 
                     b.HasOne("CelebrationRegister.Data.Entities.Role.Role", "Role")
                         .WithMany("EmployeeRoles")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("CelebrationRegister.Data.Entities.Role.Permission", b =>
-                {
-                    b.HasOne("CelebrationRegister.Data.Entities.Role.Permission", null)
-                        .WithMany("Permissions")
-                        .HasForeignKey("ParentId");
-                });
-
-            modelBuilder.Entity("CelebrationRegister.Data.Entities.Role.PermissionRole", b =>
-                {
-                    b.HasOne("CelebrationRegister.Data.Entities.Role.Permission", "Permission")
-                        .WithMany("PermissionRoles")
-                        .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CelebrationRegister.Data.Entities.Role.Role", "Role")
-                        .WithMany("PermissionRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CelebrationRegister.Core.Security;
 using CelebrationRegister.Core.Services.Interfaces;
 using CelebrationRegister.Core.Tools;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 namespace CelebrationRegister.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [PermissionChecker(1)]
     public class NotificationsController : Controller
     {
         #region Injection

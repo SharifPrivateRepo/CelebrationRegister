@@ -16,6 +16,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Contracts" Version="3.1.4" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore" Version="3.1.4" />
+    <PackageReference Include="SharpZipLib" Version="1.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,7 +30,8 @@
     <Folder Include="Areas\UserPanel\Data\" />
     <Folder Include="Areas\UserPanel\Models\" />
     <Folder Include="Views\News\" />
-    <Folder Include="wwwroot\Data\" />
+    <Folder Include="wwwroot\Data\ReportCards\" />
+    <Folder Include="wwwroot\Data\PersonalImages\" />
     <Folder Include="wwwroot\NotificationImages\" />
   </ItemGroup>
 
